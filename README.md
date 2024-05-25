@@ -29,7 +29,7 @@ Before running the project, you need to set up the MSSQL database:
 
 - Connect to your local MSSQL Server instance.
 
-- Run the .script.sql file provided to create all the necessary tables, stored procedures, and database schema.
+- Run the Db-script.sql file provided to create all the necessary tables, stored procedures, and database schema.
 
 ## Configuration
 
@@ -52,6 +52,10 @@ Once you have configured the project settings, you can run it using Visual Studi
 ## Additional Notes
 If you encounter any issues during setup or running the project, refer to the Issues section of this repository or reach out to the project maintainers for assistance.
 mail : sahillohan07@gmail.com
+
+## Db-design
+- Go to this link
+https://drive.google.com/file/d/11du7kvw5-Ry-yNSIo1_l1vP_yq9gselI/view
 
 ## DB-Script
 
