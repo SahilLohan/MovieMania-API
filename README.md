@@ -51,7 +51,6 @@ Once you have configured the project settings, you can run it using Visual Studi
 
 ## Additional Notes
 If you encounter any issues during setup or running the project, refer to the Issues section of this repository or reach out to the project maintainers for assistance.
+mail : sahillohan07@gmail.com
 
-For more detailed documentation or guides, refer to the Wiki section of this repository.
 
-Feel free to customize this README template based on your specific project requirements and add any additional instructions or links as needed.
