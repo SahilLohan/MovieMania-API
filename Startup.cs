@@ -67,6 +67,7 @@ namespace MovieMania
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieMania v1"));
             //}
+            app.UseCors("AllowAnyOrigin");
 
             app.UseHttpsRedirection();
 
