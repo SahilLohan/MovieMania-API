@@ -30,7 +30,7 @@ INSERT INTO Foundation.Genres([Name])
 
         public async Task<int> DeleteAsync(int id)
         {
-            return await ExecuteStoredProcedureAsync("usp_DeleteGenre", id);
+            return await ExecuteStoredProcedureAsync("usp_DeleteGenre", new { Id = id });
         }
 
         public async Task<List<Genre>> GetAsync()

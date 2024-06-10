@@ -33,7 +33,7 @@ VALUES (
 
         public async Task<int> DeleteAsync(int id)
         {
-            return await ExecuteStoredProcedureAsync("usp_DeleteReview", id);
+            return await ExecuteStoredProcedureAsync("usp_DeleteReview", new { Id = id });
         }
 
         public async Task<int> DeleteReviewOfMovieAsync(int movieId)

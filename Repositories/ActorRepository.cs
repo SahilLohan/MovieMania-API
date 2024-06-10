@@ -37,7 +37,7 @@ VALUES (
 
         public async Task<int> DeleteAsync(int id)
         {
-            return await ExecuteStoredProcedureAsync("usp_DeleteActor", id);   
+            return await ExecuteStoredProcedureAsync("usp_DeleteActor", new {Id =id});   
         }
 
         public async Task<List<Actor>> GetAsync()

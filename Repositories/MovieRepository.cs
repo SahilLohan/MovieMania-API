@@ -92,7 +92,7 @@ WHERE Id = @id;";
 
         public async Task<int> DeleteAsync(int id)
         {
-            return await ExecuteStoredProcedureAsync("usp_DeleteMovie", id);
+            return await ExecuteStoredProcedureAsync("usp_DeleteMovie", new { Id = id });
         }
 
     }
