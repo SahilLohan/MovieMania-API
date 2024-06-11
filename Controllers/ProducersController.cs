@@ -5,6 +5,8 @@ using MovieMania.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using MovieMania.Authentication;
 
 namespace MovieMania.Controllers
 {
@@ -18,6 +20,7 @@ namespace MovieMania.Controllers
         {
             _producerService = producerService;
         }
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] ProducerRequest producer)
         {
@@ -32,13 +35,14 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
             return Ok(await _producerService.GetAsync());
         }
 
-
+        [Authorize]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAsync([FromRoute] int id)
         {
@@ -53,6 +57,7 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] ProducerRequest producer)
         {
@@ -74,6 +79,7 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {

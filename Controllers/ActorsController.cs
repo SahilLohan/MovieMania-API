@@ -5,6 +5,8 @@ using MovieMania.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using MovieMania.Authentication;
 
 namespace MovieMania.Controllers
 {
@@ -20,7 +22,7 @@ namespace MovieMania.Controllers
             _actorService = actorService;
             _mapper = mapper;
         }
-
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] ActorRequest actor)
         {
@@ -35,15 +37,15 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
-        [Route("/giveAllActors")]
-        //[Route("/ActorsDedeBhai")]
+        [Route("/Actors")]
         public async Task<IActionResult> GetAsync()
         {
             return Ok(await _actorService.GetAsync());
         }
 
-
+        [Authorize]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAsync([FromRoute] int id)
         {
@@ -58,6 +60,7 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] ActorRequest actor)
         {
@@ -79,6 +82,7 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {

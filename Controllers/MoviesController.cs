@@ -11,6 +11,8 @@ using Firebase.Storage;
 using Microsoft.Data.SqlClient;
 using MovieMania.Helpers.Filters;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
+using MovieMania.Authentication;
 /*
  * Controller should have proper methods to handle following operation with usage of HTTP Verbs
     - Create - POST /resources
@@ -34,6 +36,7 @@ namespace MovieMania.Controllers
             _firebaseConnectionString = connectionString.Value.FirebaseConnectionString;
 
         }
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] MovieRequest movie)
         {
@@ -71,6 +74,7 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] MovieRequest movie)
         {
@@ -92,6 +96,7 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {
@@ -109,8 +114,8 @@ namespace MovieMania.Controllers
             }
         }
 
-        
-        [HttpPost("upload")]
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpPost("/uploadImage")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             if (file == null || file.Length == 0)

@@ -22,10 +22,12 @@ namespace MovieMania.Repositories
 INSERT INTO Foundation.Reviews (
 	[Message]
 	,[MovieId]
+    ,[UserName]
 	)
 VALUES (
 	@Message
 	,@MovieId
+    ,@UserName
 	);";
 
             return await CreateAsync(query, review);
@@ -53,6 +55,7 @@ VALUES (
 SELECT [Id]
 	,[Message]
 	,[MovieId]
+    ,[UserName]
 FROM Foundation.Reviews
 WHERE MovieId = @movieId;";
             SqlConnection connection = null;
@@ -84,6 +87,7 @@ WHERE MovieId = @movieId;";
 SELECT [Id]
 	,[Message]
 	,[MovieId]
+    ,[UserName]
 FROM Foundation.Reviews
 WHERE [Id] = @id;";
             SqlConnection connection = null;
@@ -115,6 +119,7 @@ WHERE [Id] = @id;";
 UPDATE Foundation.Reviews
 SET [Message] = @Message
 	,[MovieId] = @MovieId
+    ,[UserName]=@UserName
 	,[UpdatedAt] = GETDATE()
 WHERE Id = @Id;";
             return await UpdateAsync(query, review);

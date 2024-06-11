@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using MovieMania.Authentication;
 
 namespace MovieMania.Controllers
 {
@@ -20,6 +22,7 @@ namespace MovieMania.Controllers
         {
             _reviewService = reviewService;
         }
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] ReviewRequest review)
         {
@@ -34,7 +37,7 @@ namespace MovieMania.Controllers
                 return BadRequest(ex.Message);
             }  
         }
-
+        [Authorize]
         [HttpGet("/movies/{movieId}/reviews")]
         public async Task<IActionResult> GetAsync([FromRoute]int movieId)
         {
@@ -48,7 +51,7 @@ namespace MovieMania.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
         {
@@ -62,6 +65,7 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] ReviewRequest review)
         {
@@ -83,6 +87,7 @@ namespace MovieMania.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {

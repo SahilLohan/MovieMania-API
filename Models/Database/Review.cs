@@ -9,5 +9,6 @@ namespace MovieMania.Models.Database
         public int MovieId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string UserName { get; set; }
     }
 }

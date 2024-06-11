@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using MovieMania.Authentication;
 using MovieMania.CustomExceptions;
 using MovieMania.Models.Database;
 using MovieMania.Models.Request;
@@ -13,22 +15,28 @@ namespace MovieMania.Services
 {
     public class ReviewService : IReviewService
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMovieService _movieService;
         private readonly IReviewRepository _reviewRepository;
         private readonly IMapper _mapper;
-        public ReviewService(IReviewRepository reviewRepository, IMapper mapper,IMovieService movieService)
+        public ReviewService(IReviewRepository reviewRepository,UserManager<ApplicationUser> userManager,IMapper mapper,IMovieService movieService)
         {
+            _userManager = userManager;
             _movieService = movieService;
             _reviewRepository = reviewRepository;
             _mapper = mapper;
         }
         public async Task ValidateReviewObjectAsync(ReviewRequest review)
         {
-            if (string.IsNullOrWhiteSpace(review.Message))
-                throw new InvalidRequestObjectException("Review message is required");
+            if (string.IsNullOrWhiteSpace(review.Message) || string.IsNullOrWhiteSpace(review.UserName))
+                throw new InvalidRequestObjectException("Review message and UserName is required");
             else if (review.Message.Length>1000)
                 throw new InvalidRequestObjectException("Review message length should be than 1000 characters");
-
+            var userExist = await _userManager.FindByNameAsync(review.UserName);
+            if(userExist==null)
+            {
+                throw new InvalidRequestObjectException("UserName invalid");
+            }
             try
             {
                 var _ = await _movieService.GetAsync(review.MovieId);
@@ -46,6 +54,7 @@ namespace MovieMania.Services
             try
             {
                 await ValidateReviewObjectAsync(review);
+
                 id = await _reviewRepository.CreateAsync(_mapper.Map<Review>(review));
             }
             catch

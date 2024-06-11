@@ -9,7 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-
+using MovieMania.Authentication;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 namespace MovieMania
 {
     public class Startup
@@ -34,6 +39,37 @@ namespace MovieMania
                                .AllowAnyMethod();
                     });
             });
+            // entity for user authentication
+            services.AddDbContext<ApplicationDbContext>(options => 
+            options.UseSqlServer(Configuration["ConnectionString:IMDBDatabaseConnectionString"]));
+
+            services.AddIdentity<ApplicationUser,IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+            // adding Jwt bearer
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["JWT:ValidAudience"],
+                    ValidIssuer = Configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                };
+            });
+
+            // other services
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -42,17 +78,17 @@ namespace MovieMania
             services.AddAutoMapper(typeof(Startup));
             services.Configure<ConnectionString>(Configuration.GetSection("ConnectionString"));
             // adding custom services
-            services.TryAddSingleton<IActorRepository,ActorRepository> ();
-            services.TryAddSingleton<IGenreRepository, GenreRepository>();
-            services.TryAddSingleton<IMovieRepository, MovieRepository>();
-            services.TryAddSingleton<IProducerRepository, ProducerRepository>();
-            services.TryAddSingleton<IReviewRepository, ReviewRepository>();
+            services.TryAddScoped<IActorRepository,ActorRepository> ();
+            services.TryAddScoped<IGenreRepository, GenreRepository>();
+            services.TryAddScoped<IMovieRepository, MovieRepository>();
+            services.TryAddScoped<IProducerRepository, ProducerRepository>();
+            services.TryAddScoped<IReviewRepository, ReviewRepository>();
 
-            services.TryAddSingleton<IActorService, ActorService>();
-            services.TryAddSingleton<IGenreService, GenreService>();
-            services.TryAddSingleton<IMovieService, MovieService>();
-            services.TryAddSingleton<IProducerService, ProducerService>();
-            services.TryAddSingleton<IReviewService, ReviewService>();
+            services.TryAddScoped<IActorService, ActorService>();
+            services.TryAddScoped<IGenreService, GenreService>();
+            services.TryAddScoped<IMovieService, MovieService>();
+            services.TryAddScoped<IProducerService, ProducerService>();
+            services.TryAddScoped<IReviewService, ReviewService>();
 
             
 
@@ -72,6 +108,7 @@ namespace MovieMania
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
