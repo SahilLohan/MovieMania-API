@@ -103,7 +103,9 @@ namespace MovieMania.Services
 
                 if(parameters.Year!=0)
                     movies = movies.Where(m => m.YearOfRelease == parameters.Year).ToList();
-
+                if(string.IsNullOrWhiteSpace(parameters.Search))
+                    movies = movies.Where(m=>m.Name.Contains(parameters.Search)).ToList();
+                
                 foreach (var movie in movies)
                 {
                     MovieResponse movieUpdated = await GetAsync(movie.Id);
