@@ -30,15 +30,26 @@ namespace MovieMania
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAnyOrigin",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyHeader()
-                               .AllowAnyMethod();
-                    });
-            });
+{
+    options.AddPolicy("CorsPolicy",
+        builder =>
+        {
+            builder.WithOrigins("https://cinemacraze.netlify.app")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
+            // services.AddCors(options =>
+            // {
+            //     options.AddPolicy("AllowAnyOrigin",
+            //         builder =>
+            //         {
+            //             builder.AllowAnyOrigin()
+            //                    .AllowAnyHeader()
+            //                    .AllowAnyMethod();
+            //         });
+            // });
             // entity for user authentication
             services.AddDbContext<ApplicationDbContext>(options => 
             options.UseSqlServer(Configuration["ConnectionString:IMDBDatabaseConnectionString"]));
@@ -103,11 +114,12 @@ namespace MovieMania
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieMania v1"));
             //}
-            app.UseCors("AllowAnyOrigin");
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            // CORS must be between Routing and Authentication
+    app.UseCors("CorsPolicy");
             app.UseAuthentication();
 
             app.UseAuthorization();
